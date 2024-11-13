@@ -55,6 +55,22 @@ class Project {
         this.tasks.sort((a, b) => a.deadline - b.deadline);
         console.table(this.tasks);
     }
+
+    /*
+    Crea una función de orden superior filtrarTareasProyecto que tome una
+    función de filtrado como argumento y la aplique a la lista de tareas de un
+    proyecto.
+     */
+    showFilteredTasks(filterFunction, query) {
+        console.table(filterFunction(query));
+    }
+
+    filterTasksByStatus = (status) => {
+        return this.tasks.filter(task => task.status === status);
+    }
+    filterTasksBySearch = (search) => {
+        return this.tasks.filter(task => task.description.toLowerCase().includes(search.toLowerCase()));
+    }
 }
 
 /*
@@ -67,3 +83,8 @@ project.addNewTask("Buy new car", new Date(2024, 10, 4), "In Progress");
 project.addNewTask("Buy new house", new Date(2024, 9, 17));
 project.showSummary();
 project.sortTasksByDeadline();
+
+project.showFilteredTasks(project.filterTasksByStatus, "Completed");
+project.showFilteredTasks(project.filterTasksByStatus, "In Progress");
+project.showFilteredTasks(project.filterTasksBySearch, "buy");
+project.showFilteredTasks(project.filterTasksBySearch, "Christmas");
