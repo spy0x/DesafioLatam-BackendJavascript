@@ -47,7 +47,7 @@ class Project {
         const tasks = this.tasks.filter(task => task.status === status);
         return tasks.length;
     }
-
+        
     /*
     Crea una función que ordene las tareas de un proyecto por fecha límite.
      */
@@ -57,20 +57,48 @@ class Project {
     }
 
     /*
+    Implementa una función calcularTiempoRestante que utilice el método
+    reduce para calcular el número total de días que faltan para completar todas
+    las tareas pendientes de un proyecto.
+     */
+    calculateRemainingTime() {
+        const currentDate = new Date();
+        const pendingTasks = this.tasks.filter(task => task.status === "Pending");
+        const remainingDays = pendingTasks.reduce((totalDays, task) => {
+            const days = Math.ceil((task.deadline - currentDate) / (1000 * 60 * 60 * 24));
+            return totalDays + days;
+        }, 0);
+        console.log(`Remaining days: ${remainingDays}`);
+    }
+    /*
+    Desarrolla una función obtenerTareasCriticas que identifique y retorne las
+    tareas que están a menos de 3 días de su fecha límite y aún no están
+    completadas.
+     */
+    getCriticalTasks() {
+        const currentDate = new Date();
+        const criticalTasks = this.tasks.filter(task => {
+            const days = Math.ceil((task.deadline - currentDate) / (1000 * 60 * 60 * 24));
+            return days <= 3 && days >= 0 && task.status !== "Completed";
+        });
+        console.table(criticalTasks);
+    }
+    /*
     Crea una función de orden superior filtrarTareasProyecto que tome una
     función de filtrado como argumento y la aplique a la lista de tareas de un
     proyecto.
      */
     showFilteredTasks(filterFunction, query) {
-        console.table(filterFunction(query));
+        console.table(filterFunction(this.tasks, query));
     }
+}
 
-    filterTasksByStatus = (status) => {
-        return this.tasks.filter(task => task.status === status);
-    }
-    filterTasksBySearch = (search) => {
-        return this.tasks.filter(task => task.description.toLowerCase().includes(search.toLowerCase()));
-    }
+function filterTasksByStatus(tasks, status) {
+    return tasks.filter(task => task.status === status);
+}
+
+function filterTasksBySearch(tasks, search) {
+    return tasks.filter(task => task.description.toLowerCase().includes(search.toLowerCase()));
 }
 
 /*
@@ -84,7 +112,21 @@ project.addNewTask("Buy new house", new Date(2024, 9, 17));
 project.showSummary();
 project.sortTasksByDeadline();
 
-project.showFilteredTasks(project.filterTasksByStatus, "Completed");
-project.showFilteredTasks(project.filterTasksByStatus, "In Progress");
-project.showFilteredTasks(project.filterTasksBySearch, "buy");
-project.showFilteredTasks(project.filterTasksBySearch, "Christmas");
+project.showFilteredTasks(filterTasksByStatus, "Completed");
+project.showFilteredTasks(filterTasksByStatus, "In Progress");
+project.showFilteredTasks(filterTasksBySearch, "buy");
+project.showFilteredTasks(filterTasksBySearch, "Christmas");
+
+project.calculateRemainingTime();
+
+const currentDate = new Date();
+const oneDay = new Date();
+const twoDays = new Date();
+const threeDays = new Date();
+oneDay.setDate(currentDate.getDate());
+twoDays.setDate(currentDate.getDate() + 1);
+threeDays.setDate(currentDate.getDate() + 2);
+project.addNewTask("Critical Task Test 01", oneDay);
+project.addNewTask("Critical Task Test 02", threeDays);
+project.addNewTask("Critical Task Test 03", twoDays);
+project.getCriticalTasks();
