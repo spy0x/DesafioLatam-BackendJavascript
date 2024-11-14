@@ -47,7 +47,7 @@ class Project {
         const tasks = this.tasks.filter(task => task.status === status);
         return tasks.length;
     }
-        
+
     /*
     Crea una función que ordene las tareas de un proyecto por fecha límite.
      */
@@ -70,6 +70,7 @@ class Project {
         }, 0);
         console.log(`Remaining days: ${remainingDays}`);
     }
+
     /*
     Desarrolla una función obtenerTareasCriticas que identifique y retorne las
     tareas que están a menos de 3 días de su fecha límite y aún no están
@@ -79,10 +80,11 @@ class Project {
         const currentDate = new Date();
         const criticalTasks = this.tasks.filter(task => {
             const days = Math.ceil((task.deadline - currentDate) / (1000 * 60 * 60 * 24));
-            return days <= 3 && days >= 0 && task.status !== "Completed";
+            return days < 3 && days >= 0 && task.status !== "Completed";
         });
         console.table(criticalTasks);
     }
+
     /*
     Crea una función de orden superior filtrarTareasProyecto que tome una
     función de filtrado como argumento y la aplique a la lista de tareas de un
@@ -100,6 +102,27 @@ function filterTasksByStatus(tasks, status) {
 function filterTasksBySearch(tasks, search) {
     return tasks.filter(task => task.description.toLowerCase().includes(search.toLowerCase()));
 }
+
+/*
+    Desarrolla una función cargarDetallesProyecto que simule una llamada
+    asíncrona a una API para cargar los detalles de un proyecto.
+    Utiliza Promises o async/await.
+*/
+async function loadProjectDetails(project) {
+    console.log("Loading project details...");
+    const showLoadedProject = await fetchProject(project);
+    showLoadedProject();
+    console.log("Project details loaded!");
+}
+function fetchProject(project) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const projectFunc = () => project.showSummary();
+            resolve(projectFunc);
+        }, 2000);
+    });
+}
+
 
 /*
     PRUEBA DE LOS MÉTODOS
@@ -130,3 +153,5 @@ project.addNewTask("Critical Task Test 01", oneDay);
 project.addNewTask("Critical Task Test 02", threeDays);
 project.addNewTask("Critical Task Test 03", twoDays);
 project.getCriticalTasks();
+
+loadProjectDetails(project);
