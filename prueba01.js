@@ -7,6 +7,56 @@ class Task {
         this.description = description;
         this.status = status;
         this.deadline = deadline;
+        this.listeners = [];
+    }
+
+    /*
+    Crea una función actualizarEstadoTarea que simule la actualización del
+    estado de una tarea en el servidor y maneje tanto el caso de éxito como el de
+    error
+    */
+    async updateTaskStatus(newStatus) {
+        console.log(`Updating task status...`);
+        try {
+            const updatedTask = await fetchTaskStatus(this, newStatus);
+            console.log(`Task status updated to: ${updatedTask.status}`);
+            console.table({
+                "Task ID": updatedTask.id,
+                "Description": updatedTask.description,
+                "Status": updatedTask.status,
+                "Deadline": updatedTask.deadline.toLocaleString()
+            });
+            if (updatedTask.status === "Completed") {
+                this.listeners.forEach(listener => listener.onTaskCompleted());
+            }
+        } catch (error) {
+            console.error(error);
+            console.log(`Task status not updated!`);
+        }
+    }
+}
+
+function fetchTaskStatus(task, newStatus) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            task.status = newStatus;
+            resolve(task);
+        }, 2000);
+    });
+}
+
+/*
+    Implementa un sistema simple de noticacionesTareas que permita a
+    diferentes partes del código "escuchar" cuando se completa una tarea.
+ */
+class TaskListener {
+    constructor(task) {
+        this.task = task;
+        task.listeners.push(this);
+    }
+
+    onTaskCompleted() {
+        console.log(`Task ${this.task.id}: ${this.task.description} has been completed!`);
     }
 }
 
@@ -131,37 +181,6 @@ function fetchProject(project) {
 }
 
 /*
-    Crea una función actualizarEstadoTarea que simule la actualización del
-    estado de una tarea en el servidor y maneje tanto el caso de éxito como el de
-    error
-*/
-async function updateTaskStatus(task, newStatus) {
-    console.log(`Updating task status...`);
-    try {
-        const updatedTask = await fetchTaskStatus(task, newStatus);
-        console.log(`Task status updated to: ${updatedTask.status}`);
-        console.table({
-            "Task ID": updatedTask.id,
-            "Description": updatedTask.description,
-            "Status": updatedTask.status,
-            "Deadline": updatedTask.deadline.toLocaleString()
-        });
-    } catch (error) {
-        console.error(error);
-        console.log(`Task status not updated!`);
-    }
-}
-
-function fetchTaskStatus(task, newStatus) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            task.status = newStatus;
-            resolve(task);
-        }, 2000);
-    });
-}
-
-/*
     PRUEBA DE LOS MÉTODOS
  */
 const project = new Project("Project Test");
@@ -193,8 +212,11 @@ project.getCriticalTasks();
 
 loadProjectDetails(project)
     .then(() => {
-        tasktoBeUpdated = project.addNewTask("Sell my TV", new Date(2025, 1, 15), "Pending");
-        updateTaskStatus(tasktoBeUpdated, "Completed");
+        const taskToBeUpdated = project.addNewTask("Sell my TV", new Date(2025, 1, 15), "Pending");
+        const listener1 = new TaskListener(taskToBeUpdated);
+        const listener2 = new TaskListener(taskToBeUpdated);
+        const listener3 = new TaskListener(taskToBeUpdated);
+        taskToBeUpdated.updateTaskStatus("Completed");
     });
 
 
