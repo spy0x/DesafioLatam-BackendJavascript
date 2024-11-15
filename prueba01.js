@@ -2,7 +2,6 @@
     Crea una estructura de datos para representar proyectos y tareas.
  */
 class Task {
-
     constructor(description, deadline, status) {
         this.id = Math.floor(Math.random() * 1000);
         this.description = description;
@@ -25,6 +24,7 @@ class Project {
     addNewTask(description, deadline, status = "Pending") {
         const task = new Task(description, deadline, status);
         this.tasks.push(task);
+        return task;
     }
 
     /*
@@ -85,14 +85,16 @@ class Project {
         console.table(criticalTasks);
     }
 
-    /*
-    Crea una función de orden superior filtrarTareasProyecto que tome una
-    función de filtrado como argumento y la aplique a la lista de tareas de un
-    proyecto.
-     */
-    showFilteredTasks(filterFunction, query) {
-        console.table(filterFunction(this.tasks, query));
-    }
+
+}
+
+/*
+Crea una función de orden superior filtrarTareasProyecto que tome una
+función de filtrado como argumento y la aplique a la lista de tareas de un
+proyecto.
+ */
+function showFilteredTasks(project, filterFunction, query) {
+    console.table(filterFunction(project.tasks, query));
 }
 
 function filterTasksByStatus(tasks, status) {
@@ -110,10 +112,15 @@ function filterTasksBySearch(tasks, search) {
 */
 async function loadProjectDetails(project) {
     console.log("Loading project details...");
-    const showLoadedProject = await fetchProject(project);
-    showLoadedProject();
-    console.log("Project details loaded!");
+    try {
+        const showLoadedProject = await fetchProject(project);
+        showLoadedProject();
+        console.log("Project details loaded!");
+    } catch (error) {
+        console.error(error);
+    }
 }
+
 function fetchProject(project) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -123,22 +130,52 @@ function fetchProject(project) {
     });
 }
 
+/*
+    Crea una función actualizarEstadoTarea que simule la actualización del
+    estado de una tarea en el servidor y maneje tanto el caso de éxito como el de
+    error
+*/
+async function updateTaskStatus(task, newStatus) {
+    console.log(`Updating task status...`);
+    try {
+        const updatedTask = await fetchTaskStatus(task, newStatus);
+        console.log(`Task status updated to: ${updatedTask.status}`);
+        console.table({
+            "Task ID": updatedTask.id,
+            "Description": updatedTask.description,
+            "Status": updatedTask.status,
+            "Deadline": updatedTask.deadline.toLocaleString()
+        });
+    } catch (error) {
+        console.error(error);
+        console.log(`Task status not updated!`);
+    }
+}
+
+function fetchTaskStatus(task, newStatus) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            task.status = newStatus;
+            resolve(task);
+        }, 2000);
+    });
+}
 
 /*
     PRUEBA DE LOS MÉTODOS
  */
 const project = new Project("Project Test");
 project.addNewTask("Give christmas presents!", new Date(2024, 11, 25), "Completed");
-project.addNewTask("New year PARTY!", new Date(2024, 11, 31));
+project.addNewTask("New year PARTY!", new Date(2024, 11, 31), "Pending");
 project.addNewTask("Buy new car", new Date(2024, 10, 4), "In Progress");
-project.addNewTask("Buy new house", new Date(2024, 9, 17));
+project.addNewTask("Buy new house", new Date(2024, 9, 17), "Pending");
 project.showSummary();
 project.sortTasksByDeadline();
 
-project.showFilteredTasks(filterTasksByStatus, "Completed");
-project.showFilteredTasks(filterTasksByStatus, "In Progress");
-project.showFilteredTasks(filterTasksBySearch, "buy");
-project.showFilteredTasks(filterTasksBySearch, "Christmas");
+showFilteredTasks(project, filterTasksByStatus, "Completed");
+showFilteredTasks(project, filterTasksByStatus, "In Progress");
+showFilteredTasks(project, filterTasksBySearch, "buy");
+showFilteredTasks(project, filterTasksBySearch, "Christmas");
 
 project.calculateRemainingTime();
 
@@ -154,4 +191,10 @@ project.addNewTask("Critical Task Test 02", threeDays);
 project.addNewTask("Critical Task Test 03", twoDays);
 project.getCriticalTasks();
 
-loadProjectDetails(project);
+loadProjectDetails(project)
+    .then(() => {
+        tasktoBeUpdated = project.addNewTask("Sell my TV", new Date(2025, 1, 15), "Pending");
+        updateTaskStatus(tasktoBeUpdated, "Completed");
+    });
+
+
