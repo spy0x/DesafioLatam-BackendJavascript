@@ -2,3 +2,5 @@
 *.pdf
 *.zip
 *.rar
+/node_modules/
+*.env
