@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export const authRouter = Router();
 
-authRouter.get("/register", (req, res) => {
+authRouter.post("/register", (req, res) => {
     const {username} = req.body;
     res.send(generateToken(username));
 });
