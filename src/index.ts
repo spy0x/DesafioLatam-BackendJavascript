@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from 'dotenv';
-import {viewsRouter} from "./routes/viewsRouter";
-import {beersRouter} from "./routes/beersRouter";
-import {authRouter} from "./routes/authRouter";
+import {viewsRouter} from "./routes/viewsRouter.js";
+import {beersRouter} from "./routes/beersRouter.js";
+import {authRouter} from "./routes/authRouter.js";
 
 dotenv.config();
 
