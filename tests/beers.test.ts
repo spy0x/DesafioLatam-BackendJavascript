@@ -35,19 +35,27 @@ const mockBeers: Beer[] = [
 jest.mock('../src/models/beers.model', () => {
     return {
         getAllBeers: jest.fn(() => Promise.resolve(mockBeers)),
-        addBeer: jest.fn((cerveceria: string, origen: string, estilo: string, alcohol: number, premios: string, ibu: number) => { mockBeers.push({id: "4", cerveceria, origen, estilo, alcohol, premios, ibu})
+        addBeer: jest.fn((cerveceria: string, origen: string, estilo: string, alcohol: number, premios: string, ibu: number) => {
+            mockBeers.push({id: "4", cerveceria, origen, estilo, alcohol, premios, ibu})
+            return Promise.resolve();
         }),
         getBeer: jest.fn((id: string) => Promise.resolve(mockBeers.find(beer => beer.id === id))),
         changeBeerName: jest.fn((id: string, cerveceria: string) => {
             const beer = mockBeers.find(beer => beer.id === id);
             if (beer) {
                 beer.cerveceria = cerveceria;
+                return Promise.resolve();
+            } else {
+                return Promise.reject();
             }
         }),
         removeBeer: jest.fn((id: string) => {
             const index = mockBeers.findIndex(beer => beer.id === id);
             if (index !== -1) {
                 mockBeers.splice(index, 1);
+                return Promise.resolve();
+            } else {
+                return Promise.reject();
             }
         })
     }
@@ -84,7 +92,7 @@ describe('Testing Beers Endpoints!', () => {
         const response = await supertest(app).put('/api/beers/4').send({cerveceria: 'Cerveceria 4 oficial'});
         expect(response.status).toBe(200);
         expect(response.body).toEqual({status: "success", message: "Beer updated successfully"});
-        expect(mockBeers[0].cerveceria).toBe('Cerveceria 5');
+        expect(mockBeers[3].cerveceria).toBe('Cerveceria 4 oficial');
     });
 
     it('Delete a beer by id', async () => {
@@ -94,5 +102,6 @@ describe('Testing Beers Endpoints!', () => {
         expect(mockBeers).not.toContainEqual(expect.objectContaining({id: "4"}));
     });
 });
+
 
 
