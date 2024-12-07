@@ -6,7 +6,7 @@ import {authRouter} from "./routes/auth.route";
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 
 // MIDDLEWARES
 app.use(express.json());

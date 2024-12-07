@@ -8,14 +8,22 @@ const pool = () => new Pool({
     port: parseInt(process.env.DB_PORT as string) || 5432,
     allowExitOnIdle: true
 });
-export const getBeers = async () => {
+export const getAllBeers = async () => {
     const query = `SELECT *
                    FROM beers`;
     const result = await pool().query(query);
     return result.rows;
 }
 
-export const addBeer = async (cerveceria: string, origen: string, estilo: string, alcohol: number, premios: number, ibu: number) => {
+export const getBeer = async (id: string) => {
+    const query = `SELECT *
+                   FROM beers
+                   WHERE id = $1`;
+    const result = await pool().query(query, [id]);
+    return result.rows[0];
+}
+
+export const addBeer = async (cerveceria: string, origen: string, estilo: string, alcohol: number, premios: string, ibu: number) => {
     const query = `INSERT INTO beers (cerveceria, origen, estilo, alcohol, premios, ibu)
                    VALUES ($1, $2, $3, $4, $5, $6)`;
     await pool().query(query, [cerveceria, origen, estilo, alcohol, premios, ibu]);
@@ -34,5 +42,3 @@ export const removeBeer = async (id: string) => {
                    WHERE id = $1`;
     await pool().query(query, [id]);
 }
-        
-

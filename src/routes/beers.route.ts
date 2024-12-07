@@ -1,14 +1,24 @@
 import {Router} from "express";
 import {isLogged} from "../middlewares/auth";
-import {addBeer, changeBeerName, getBeers, removeBeer} from "../models/beers.model";
+import {addBeer, changeBeerName, getAllBeers, getBeer, removeBeer} from "../models/beers.model";
 
 export const beersRouter = Router();
 beersRouter.get("/", async (req, res) => {
     try {
-        const result = await getBeers();
+        const result = await getAllBeers();
         res.status(200).json({status: "success", payload: result});
     } catch {
         res.status(500).json({status: "error", message: "Could not retrieve beers"});
+    }
+});
+
+beersRouter.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const result = await getBeer(id);
+        res.status(200).json({status: "success", payload: result});
+    } catch {
+        res.status(500).json({status: "error", message: "Could not retrieve beer"});
     }
 });
 
