@@ -1,7 +1,7 @@
 import { sequelize } from "./db";
 import { DataTypes } from "sequelize";
 
-export const Beers = sequelize.define('beers', {
+export const Beer = sequelize.define('beers', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
