@@ -7,6 +7,10 @@ export const Beer = sequelize.define('beers', {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
+    nombre: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     cerveceria: {
         type: DataTypes.STRING,
         allowNull: false,

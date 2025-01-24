@@ -2,6 +2,7 @@ import {Model} from 'sequelize';
 
 export type Beer = {
     id: string;
+    nombre: string;
     cerveceria: string;
     origen: string;
     estilo: string;
@@ -12,6 +13,7 @@ export type Beer = {
 
 export class BeerModel extends Model<Beer> {
     id: string;
+    nombre: string;
     cerveceria: string;
     origen: string;
     estilo: string;
