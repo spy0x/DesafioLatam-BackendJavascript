@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "nodemon --watch 'src/**/*.{ts,yaml}' --exec 'ts-node' src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.{ts,yaml}' --exec ts-node src/index.ts",
     "build": "tsc",
     "test": "jest"
   },
