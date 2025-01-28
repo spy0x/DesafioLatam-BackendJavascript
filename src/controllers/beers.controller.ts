@@ -22,9 +22,9 @@ export const beerGet = async (req: Request, res: Response) => {
 }
 
 export const beerCreate = async (req: Request, res: Response) => {
-    const {cerveceria, origen, estilo, alcohol, premios, ibu} = req.body;
+    const {cerveceria, nombre, origen, estilo, alcohol, premios, ibu} = req.body;
     try {
-        await addBeer(cerveceria, origen, estilo, alcohol, premios, ibu);
+        await addBeer(cerveceria, nombre, origen, estilo, alcohol, premios, ibu);
         res.status(201).json({status: "success", message: "Beer added successfully"});
     } catch (e) {
         res.status(500).json({status: "error", message: "Could not add beer"});

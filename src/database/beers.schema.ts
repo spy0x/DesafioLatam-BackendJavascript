@@ -3,9 +3,9 @@ import { DataTypes } from "sequelize";
 
 export const Beer = sequelize.define('beers', {
     id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        autoIncrement: true
     },
     nombre: {
         type: DataTypes.STRING,
@@ -31,3 +31,5 @@ export const Beer = sequelize.define('beers', {
         type: DataTypes.INTEGER,
     }
 });
+
+

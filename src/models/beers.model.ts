@@ -28,8 +28,8 @@ export const getBeer = async (id: string) => {
   // return result.rows[0];
 };
 
-export const addBeer = async (cerveceria: string, origen: string, estilo: string, alcohol: number, premios: string, ibu: number) => {
-  return await Beer.create({ cerveceria, origen, estilo, alcohol, premios, ibu });
+export const addBeer = async (cerveceria: string, nombre: string, origen: string, estilo: string, alcohol: number, premios: string, ibu: number) => {
+  return await Beer.create({ cerveceria, nombre, origen, estilo, alcohol, premios, ibu });
   // const query = `INSERT INTO beers (cerveceria, origen, estilo, alcohol, premios, ibu)
   //                VALUES ($1, $2, $3, $4, $5, $6)`;
   // await pool().query(query, [cerveceria, origen, estilo, alcohol, premios, ibu]);

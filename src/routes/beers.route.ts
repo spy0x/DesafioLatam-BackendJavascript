@@ -1,14 +1,15 @@
-import { Router } from "express";
-import { beerCreate, beerDeleteOne, beerGet, beersGetAll, beerUpdate as beerUpdateName } from "../controllers/beers.controller";
+import { Router } from 'express';
+import { beerCreate, beerDeleteOne, beerGet, beersGetAll, beerUpdate as beerUpdateName } from '../controllers/beers.controller';
+import { isLogged } from '../middlewares/auth';
 
 export const beersRouter = Router();
 
-beersRouter.get("/", beersGetAll);
+beersRouter.get('/', beersGetAll);
 
-beersRouter.get("/:id", beerGet);
+beersRouter.get('/:id', beerGet);
 
-beersRouter.post("/", beerCreate);
+beersRouter.post('/', isLogged, beerCreate);
 
-beersRouter.put("/:id", beerUpdateName);
+beersRouter.put('/:id', isLogged, beerUpdateName);
 
-beersRouter.delete("/:id", beerDeleteOne);
+beersRouter.delete('/:id', isLogged, beerDeleteOne);

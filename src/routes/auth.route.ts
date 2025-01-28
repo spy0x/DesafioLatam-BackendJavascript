@@ -1,14 +1,11 @@
-import {Router} from "express";
-import jwt from "jsonwebtoken";
+import { Router } from "express";
+import { login, register } from "../controllers/auth.controller";
+import { userAvailable, validUserData } from "../middlewares/auth";
+
 
 export const authRouter = Router();
 
-authRouter.post("/register", (req, res) => {
-    const {username} = req.body;
-    res.send(generateToken(username));
-});
+authRouter.post("/login", validUserData, login);
+authRouter.post("/register", validUserData, userAvailable, register);
 
-const generateToken = (username: string) => {
-    const jwtSecret = process.env.JWT_SECRET || "secret";
-    return jwt.sign({username}, jwtSecret, {expiresIn: "1h"});
-}
+
