@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { beerCreate, beerDeleteOne, beerGet, beersGetAll, beerUpdate as beerUpdateName } from '../controllers/beers.controller';
-import { isLogged } from '../middlewares/auth';
+import { isLogged } from '../middlewares/auth.middleware';
 
 export const beersRouter = Router();
 
