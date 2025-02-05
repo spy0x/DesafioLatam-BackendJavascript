@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { findUser } from '../models/auth.model';
+import { findUser } from '../models/users.model';
+import { UserJwtPayload, UserModel } from '../../types';
 
 export const isLogged = (req: Request, res: Response, next: NextFunction) => {
   const jwtSecret = process.env.JWT_SECRET || 'secret';
@@ -39,4 +40,24 @@ export const userAvailable = async (req: Request, res: Response, next: NextFunct
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'INTERNAL SERVER ERROR' });
   }
+};
+
+export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token) {
+    const { username } = jwt.decode(token) as UserJwtPayload;
+    if (username) {
+      try {
+        const { role } = (await findUser(username)) as UserModel;
+        if (role === 'admin') {
+          next();
+          return;
+        }
+      } catch (error) {
+        res.status(500).json({ status: 'error', message: 'INTERNAL SERVER ERROR' });
+      }
+    }
+  }
+  res.status(403).json({ status: 'error', message: 'FORBIDDEN' });
 };

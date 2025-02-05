@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { generateToken } from '../utils/jwt.utils';
-import { createUser, findUser } from '../models/auth.model';
+import { createUser, findUser } from '../models/users.model';
 import { comparePassword, hashPassword } from '../utils/brcrypt.utils';
 import { UserModel } from '../../types';
 

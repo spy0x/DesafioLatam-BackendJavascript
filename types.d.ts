@@ -26,4 +26,9 @@ export class UserModel extends Model {
     id: string;
     username: string;
     password: string;
+    role: string;
 }
+
+export interface UserJwtPayload extends jwt.JwtPayload {
+    username: string;
+  }

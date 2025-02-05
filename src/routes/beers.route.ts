@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { beerCreate, beerDeleteOne, beerGet, beersGetAll, beerUpdate as beerUpdateName } from '../controllers/beers.controller';
-import { isLogged } from '../middlewares/auth.middleware';
+import { isAdmin, isLogged } from '../middlewares/auth.middleware';
 
 export const beersRouter = Router();
 
-beersRouter.get('/', beersGetAll);
+beersRouter.get('/', isLogged, beersGetAll);
 
-beersRouter.get('/:id', beerGet);
+beersRouter.get('/:id', isLogged, beerGet);
 
-beersRouter.post('/', isLogged, beerCreate);
+beersRouter.post('/', isLogged, isAdmin, beerCreate);
 
-beersRouter.put('/:id', isLogged, beerUpdateName);
+beersRouter.put('/:id', isLogged, isAdmin, beerUpdateName);
 
-beersRouter.delete('/:id', isLogged, beerDeleteOne);
+beersRouter.delete('/:id', isLogged, isAdmin, beerDeleteOne);

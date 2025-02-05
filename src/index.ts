@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { viewsRouter } from './routes/views.route';
 import { beersRouter } from './routes/beers.route';
-import { authRouter } from './routes/auth.route';
+import { usersRouter } from './routes/users.route';
 import { sequelize } from './database/db';
 import './database/beers.schema';
 
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ROUTER
 app.use('/api/beers', beersRouter);
-app.use('/auth', authRouter);
+app.use('/auth', usersRouter);
 app.use('/', viewsRouter);
 
 // RUN SERVER
