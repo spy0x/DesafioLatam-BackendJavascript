@@ -32,3 +32,8 @@ export class UserModel extends Model {
 export interface UserJwtPayload extends jwt.JwtPayload {
     username: string;
   }
+
+export type Message = {
+    header: string;
+    body: string;
+}
