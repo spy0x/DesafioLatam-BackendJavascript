@@ -54,16 +54,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Algo salió mail!');
 });
 
-/**
- * Middleware de nivel de router
- * Se ejecuta solo para las rutas definidas en este router
- */
-beersRouter.use((req, res, next) => {
-  console.log('Middleware de nivel de direccionador ejecutado.');
-  next();
-});
 
 // ROUTER
+
 app.use('/api/beers', beersRouter);
 app.use('/auth', usersRouter);
 app.use('/', viewsRouter);

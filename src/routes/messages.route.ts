@@ -19,4 +19,3 @@ messagesRouter.get('/route', (req, res) => {
   res.status(400).send('Tipo de mensaje no soportado.');
   }
   });
-  
