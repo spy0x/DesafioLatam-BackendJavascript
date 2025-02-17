@@ -2,13 +2,14 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
+import { Message } from '../types';
 import './database/beers.schema';
 import { sequelize } from './database/db';
 import { beersRouter } from './routes/beers.route';
+import { messagesRouter } from './routes/messages.route';
 import { usersRouter } from './routes/users.route';
 import { viewsRouter } from './routes/views.route';
-import { messagesRouter } from './routes/messages.route';
-import { Message } from '../types';
+import { startWebSocket } from './utils/socket.utils';
 
 /**
  * Estructuras de datos para el sistema de mensajería
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('dev'));
+app.use(express.static('public'));
 
 /* Middleware de nivel de aplicación
  * Se ejecuta en cada solicitud que llega al servidor
@@ -59,8 +61,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 app.use('/api/beers', beersRouter);
 app.use('/auth', usersRouter);
-app.use('/', viewsRouter);
 app.use('/api', messagesRouter);
+app.use('/', viewsRouter);
 
 //
 //ROUTES
@@ -107,9 +109,10 @@ const startServer = async () => {
     // await sequelize.authenticate();
     await sequelize.sync({ force: true });
     console.log('Conexión a la base de datos realizada correctamente');
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
+    startWebSocket(server);
   } catch (err) {
     console.log('Error al conectar a la base de datos', err);
   }
