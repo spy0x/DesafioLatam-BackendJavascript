@@ -12,10 +12,32 @@
 
 <body>
   <h1>Socket.io en acción</h1>
+  <h id="username">Loggeado como: </h>
+  <p>Mensaje:</p>
+  <input type="text" id="message" />
+  <button id="send">Enviar</button>
+  <section id="messages"></section>
   <script>
     const socket = io();
     socket.on('connect', () => {
       console.log('Conectado al servidor');
+    });
+    
+    socket.on('setUsername', (username) => {
+      document.getElementById('username').textContent = `Loggeado como: ${username}`;
+    });
+
+    document.getElementById('send').addEventListener('click', () => {
+      const message = document.getElementById('message').value;
+      socket.emit('message', message);
+    });
+
+    socket.on('message', (message) => {
+      const messages = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.textContent = message;
+      li.style.listStyleType = 'none';
+      messages.appendChild(li);
     });
   </script>
 </body>

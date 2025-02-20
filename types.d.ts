@@ -37,3 +37,8 @@ export type Message = {
     header: string;
     body: string;
 }
+
+export type ChatUser = {
+    id: string;
+    username: string;
+}
