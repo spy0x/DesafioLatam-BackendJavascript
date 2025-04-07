@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+    integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <h1>Socket.io en acción</h1>
+  <h id="username">Loggeado como: </h>
+  <p>Mensaje:</p>
+  <input type="text" id="message" />
+  <button id="send">Enviar</button>
+  <section id="messages"></section>
+  <script>
+    const socket = io();
+    socket.on('connect', () => {
+      console.log('Conectado al servidor');
+    });
+    
+    socket.on('setUsername', (username) => {
+      document.getElementById('username').textContent = `Loggeado como: ${username}`;
+    });
+
+    document.getElementById('send').addEventListener('click', () => {
+      const message = document.getElementById('message').value;
+      socket.emit('message', message);
+    });
+
+    socket.on('message', (message) => {
+      const messages = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.textContent = message;
+      li.style.listStyleType = 'none';
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+
+</html>
