@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
@@ -15,6 +15,9 @@
   "name": "desafiolatam-backendjavascript",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/bcrypt": "^5.0.2",
