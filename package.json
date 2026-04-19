@@ -15,6 +15,9 @@
   "name": "desafiolatam-backendjavascript",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/bcrypt": "^5.0.2",
